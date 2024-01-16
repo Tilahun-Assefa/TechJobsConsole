@@ -16,11 +16,11 @@ namespace TechJobsConsole
 
             // Column options
             Dictionary<string, string> columnChoices = new Dictionary<string, string>();
-            columnChoices.Add("core competency", "Skill");
+            columnChoices.Add("all", "All");
+            columnChoices.Add("position type", "Position Type");
             columnChoices.Add("employer", "Employer");
             columnChoices.Add("location", "Location");
-            columnChoices.Add("position type", "Position Type");
-            columnChoices.Add("all", "All");
+            columnChoices.Add("core competency", "Skill");
 
             Console.WriteLine("Welcome to LaunchCode's TechJobs App!");
 
@@ -99,8 +99,18 @@ namespace TechJobsConsole
                     Console.WriteLine(j + " - " + choices[choiceKeys[j]]);
                 }
 
-                string input = Console.ReadLine();
-                choiceIdx = int.Parse(input);
+                try
+                {
+                    string input = Console.ReadLine();
+
+                    choiceIdx = int.Parse(input);
+                }
+                catch (FormatException ex)
+                {
+                    choiceIdx = 2;
+                    Console.WriteLine("Invalid input. Please enter ctrl + c to quit. " + ex.Message);
+                }
+
 
                 if (choiceIdx < 0 || choiceIdx >= choiceKeys.Length)
                 {
@@ -118,15 +128,21 @@ namespace TechJobsConsole
 
         private static void PrintJobs(List<Dictionary<string, string>> someJobs)
         {
-            
-            foreach(Dictionary<string, string> job in someJobs)
+            if (someJobs.Count > 0)
             {
-                foreach(KeyValuePair<string, string> vacancy in job)
+                foreach (Dictionary<string, string> job in someJobs)
                 {
-                    Console.Write(vacancy.Key + ": " + vacancy.Value + "\t"); 
+                    Console.WriteLine("*****");
+                    foreach (KeyValuePair<string, string> vacancy in job)
+                    {
+                        Console.WriteLine(vacancy.Key + ": " + vacancy.Value);
+                    }
+                    Console.WriteLine("*****\r\n");
                 }
-                Console.WriteLine();
+            }else { 
+                Console.WriteLine("No results"); 
             }
+
         }
     }
 }
