@@ -28,8 +28,11 @@ namespace TechJobsConsole
             while (true)
             {
 
-                string actionChoice = GetUserSelection("View Jobs", actionChoices);
-
+                string actionChoice = GetUserSelection("View Jobs by (type 'ctrl+c' to quit): ", actionChoices);
+                if(actionChoice == null)
+                {
+                    break;
+                }
                 if (actionChoice.Equals("list"))
                 {
                     string columnChoice = GetUserSelection("List", columnChoices);
@@ -43,6 +46,7 @@ namespace TechJobsConsole
                         List<string> results = JobData.FindAll(columnChoice);
 
                         Console.WriteLine("\n*** All " + columnChoices[columnChoice] + " Values ***");
+                        //print list of skills, employers etc...
                         foreach (string item in results)
                         {
                             Console.WriteLine(item);
@@ -63,12 +67,11 @@ namespace TechJobsConsole
                     // Fetch results
                     if (columnChoice.Equals("all"))
                     {
-                        Console.WriteLine("Search all fields not yet implemented.");
+                        PrintJobs(JobData.FindByValue(searchTerm));
                     }
                     else
                     {
-                        searchResults = JobData.FindByColumnAndValue(columnChoice, searchTerm);
-                        PrintJobs(searchResults);
+                        PrintJobs(JobData.FindByColumnAndValue(columnChoice, searchTerm));
                     }
                 }
             }

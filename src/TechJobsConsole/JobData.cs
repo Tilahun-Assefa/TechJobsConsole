@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text;
 
 namespace TechJobsConsole
 {
-    class JobData
+    public class JobData
     {
         static List<Dictionary<string, string>> AllJobs = new List<Dictionary<string, string>>();
         static bool IsDataLoaded = false;
@@ -13,7 +12,10 @@ namespace TechJobsConsole
         public static List<Dictionary<string, string>> FindAll()
         {
             LoadData();
-            return AllJobs;
+
+            //Bonus mission; copy to return so as to secure the original AllJobs
+            List<Dictionary<string, string>> copyAllJobs = new List<Dictionary<string, string>>(AllJobs);
+            return copyAllJobs;
         }
 
         /*
@@ -22,6 +24,7 @@ namespace TechJobsConsole
          */
         public static List<string> FindAll(string column)
         {
+            //load data, if not already loaded
             LoadData();
 
             List<string> values = new List<string>();
@@ -35,9 +38,49 @@ namespace TechJobsConsole
                     values.Add(aValue);
                 }
             }
+            //Bonus mission: sort the values
+            values.Sort();
+
             return values;
         }
 
+        /**
+       * Search all columns for the given term
+       * input : the search term to look for
+       * return list of all jobs with at least one field containing the term value
+       */
+
+        //TODO: Complete the FindByValue method
+        public static List<Dictionary<string, string>> FindByValue(string value)
+        {
+            // load data, if not already loaded
+            LoadData();
+            //TODO - implement this method
+            List<Dictionary<string, string>> jobsByValue = new List<Dictionary<string, string>>();
+
+            foreach (Dictionary<string, string> row in AllJobs)
+            {
+                string tempValue = "";
+                foreach (KeyValuePair<string, string> entry in row)
+                {
+                    tempValue += entry.Value + " ";
+                }
+                if (tempValue.ToLower().Contains(value.ToLower()))
+                {
+                    jobsByValue.Add(row);
+                }
+
+            }
+            return jobsByValue;
+        }
+
+        /**
+         * Returns results of search the jobs data by key/value, using
+         * inclusion of the search term.
+         *
+         * For example, searching for employer "Enterprise" will include results
+         * with "Enterprise Holdings, Inc".
+         */
         public static List<Dictionary<string, string>> FindByColumnAndValue(string column, string value)
         {
             // load data, if not already loaded
@@ -49,7 +92,8 @@ namespace TechJobsConsole
             {
                 string aValue = row[column];
 
-                if (aValue.Contains(value))
+                //TODO: Make search case-insensitive
+                if (aValue.ToLower().Contains(value.ToLower()))
                 {
                     jobs.Add(row);
                 }
